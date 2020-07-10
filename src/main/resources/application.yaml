@@ -1,0 +1,64 @@
+# SERVER
+server:
+  port: 8090
+  address: localhost
+
+#server:
+#  servlet:
+#    session:
+#      cookie:
+#        secure: false
+#        http-only: true
+
+# LOGGING
+logging:
+  file:
+    name: english-app.log
+    path: ./log
+  level:
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+spring:
+  # PROFILE
+  profiles:
+    active: ${spring.profiles.active}
+  # DATASOURCE
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=EnglishApp
+    username: sa
+    password: sa
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+    dbcp2:
+      initial-size: 7
+      max-total: 20
+      pool-prepared-statements: true
+  # IDENTITY
+  application:
+    name: english-app
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+    properties:
+      entity-scan-packages: com.group1.EnglishApp.model
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+        show_sql: false
+        hbm2ddl.auto: update
+
+  # FLYWAY
+  flyway:
+    locations: classpath:/db/migration
+    baseline-version: 00000000.000000
+    table: SchemaHistory
+    out-of-order: false
+    baseline-on-migrate: true
+
+# CXF
+cxf:
+  path: /rest
