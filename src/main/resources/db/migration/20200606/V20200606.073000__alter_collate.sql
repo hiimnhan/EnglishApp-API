@@ -1,0 +1,4 @@
+-- USE master;
+-- GO
+-- ALTER DATABASE EnglishApp1
+-- COLLATE Latin1_General_100_CS_AS_SC_UTF8

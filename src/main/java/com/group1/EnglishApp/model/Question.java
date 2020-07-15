@@ -10,7 +10,7 @@ import javax.persistence.*;
  * @author Hai Dang
  */
 @Entity
-@Table(name = "[Question]", schema = "EnglishApp")
+@Table(name = "[Question]", schema = "EnglishApp1")
 public class Question extends BaseEntity{
 
     private static final long serialVersionUID = 1L;

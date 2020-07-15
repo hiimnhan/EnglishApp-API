@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Hai Dang
  */
 @Entity
-@Table(name = "[User]", schema = "EnglishApp")
+@Table(name = "[User]", schema = "EnglishApp1")
 public class User extends BaseEntity implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -48,7 +48,7 @@ public class User extends BaseEntity implements UserDetails {
     private Role role;
 
     @ManyToMany
-    @JoinTable(name = "Progress", schema = "EnglishApp",
+    @JoinTable(name = "Progress", schema = "EnglishApp1",
             joinColumns = @JoinColumn(name = "UserId", foreignKey = @ForeignKey(name = "FK_Progress_UserId")),
             inverseJoinColumns = @JoinColumn(name = "WordId", foreignKey = @ForeignKey(name = "FK_Progress_WordId")))
     @LazyCollection(LazyCollectionOption.FALSE)

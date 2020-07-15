@@ -12,7 +12,7 @@ import java.util.Set;
  * @author Hai Dang
  */
 @Entity
-@Table(name = "[Word]", schema = "EnglishApp")
+@Table(name = "[Word]", schema = "EnglishApp1")
 public class Word extends BaseEntity{
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ public class Word extends BaseEntity{
     private Set<Question> questions;
 
     @ManyToMany
-    @JoinTable(name = "Progress", schema = "EnglishApp",
+    @JoinTable(name = "Progress", schema = "EnglishApp1",
             joinColumns = @JoinColumn(name = "WordId", foreignKey = @ForeignKey(name = "FK_Progress_WordId")),
             inverseJoinColumns = @JoinColumn(name = "UserId", foreignKey = @ForeignKey(name = "FK_Progress_UserId")))
     private Set<User> users;

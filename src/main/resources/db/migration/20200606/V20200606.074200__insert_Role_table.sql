@@ -1,14 +1,14 @@
-SET IDENTITY_INSERT [EnglishApp].[Role] ON;
+SET IDENTITY_INSERT [EnglishApp1].[Role] ON;
 
 BEGIN TRANSACTION;
 
 IF NOT EXISTS(SELECT *
-              FROM [EnglishApp].[Role]
+              FROM [EnglishApp1].[Role]
               WHERE [Name] = 'ADMIN')
     BEGIN
-        INSERT INTO [EnglishApp].[Role]([Id], [Name], [DisplayName], [Description])
+        INSERT INTO [EnglishApp1].[Role]([Id], [Name], [DisplayName], [Description])
         VALUES (1, 'ADMIN', 'Administrator', 'System administrator')
-        INSERT INTO [EnglishApp].[Role]([Id], [Name], [DisplayName], [Description])
+        INSERT INTO [EnglishApp1].[Role]([Id], [Name], [DisplayName], [Description])
         VALUES (2, 'USER', 'User', 'Application user')
     END
 GO
@@ -16,4 +16,4 @@ GO
 
 COMMIT TRANSACTION;
 
-SET IDENTITY_INSERT [EnglishApp].[Role] OFF;
+SET IDENTITY_INSERT [EnglishApp1].[Role] OFF;

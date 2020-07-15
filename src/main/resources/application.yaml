@@ -1,14 +1,15 @@
 # SERVER
+#server:
+#  port: 8090
+#  address: localhost
+
 server:
   port: 8090
   address: localhost
+  servlet:
+    session:
+      tracking-modes: cookie
 
-#server:
-#  servlet:
-#    session:
-#      cookie:
-#        secure: false
-#        http-only: true
 
 # LOGGING
 logging:
@@ -24,9 +25,9 @@ spring:
     active: ${spring.profiles.active}
   # DATASOURCE
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=EnglishApp
+    url: jdbc:sqlserver://localhost:1433;databaseName=EnglishApp1
     username: sa
-    password: sa
+    password: reallyStrongPwd123
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
     dbcp2:

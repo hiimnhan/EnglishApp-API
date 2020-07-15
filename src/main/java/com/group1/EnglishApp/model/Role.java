@@ -24,7 +24,7 @@ import java.util.Set;
  * @author Hai Dang
  */
 @Entity
-@Table(name = "Role", schema = "EnglishApp")
+@Table(name = "Role", schema = "EnglishApp1")
 public class Role extends BaseEntity implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +42,7 @@ public class Role extends BaseEntity implements GrantedAuthority {
     private Set<User> users;
 
     @ManyToMany
-    @JoinTable(name = "RolePermission", schema = "EnglishApp",
+    @JoinTable(name = "RolePermission", schema = "EnglishApp1",
             joinColumns = @JoinColumn(name = "RoleId", foreignKey = @ForeignKey(name = "FK_RolePermission_RoleId")),
             inverseJoinColumns = @JoinColumn(name = "PermissionId", foreignKey = @ForeignKey(name = "FK_RolePermission_PermissionId")))
     @LazyCollection(LazyCollectionOption.FALSE)

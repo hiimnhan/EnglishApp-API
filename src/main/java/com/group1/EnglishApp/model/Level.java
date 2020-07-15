@@ -11,7 +11,7 @@ import java.util.Set;
  * @author Hai Dang
  */
 @Entity
-@Table(name = "[Level]", schema = "EnglishApp")
+@Table(name = "[Level]", schema = "EnglishApp1")
 public class Level extends BaseEntity{
 
     private static final long serialVersionUID = 1L;

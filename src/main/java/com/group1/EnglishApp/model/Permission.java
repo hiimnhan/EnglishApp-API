@@ -17,7 +17,7 @@ import java.util.Set;
  * @author Hai Dang
  */
 @Entity
-@Table(name = "Permission", schema = "EnglishApp")
+@Table(name = "Permission", schema = "EnglishApp1")
 public class Permission extends BaseEntity{
 
     private static final long serialVersionUID = 1L;
@@ -29,7 +29,7 @@ public class Permission extends BaseEntity{
     private String description;
 
     @ManyToMany
-    @JoinTable(name = "RolePermission", schema = "EnglishApp",
+    @JoinTable(name = "RolePermission", schema = "EnglishApp1",
             joinColumns = @JoinColumn(name = "PermissionId", foreignKey = @ForeignKey(name = "FK_RolePermission_PermissionId")),
             inverseJoinColumns = @JoinColumn(name = "RoleId", foreignKey = @ForeignKey(name = "FK_RolePermission_RoleId")))
     private Set<Role> roles;
