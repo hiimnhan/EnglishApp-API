@@ -101,7 +101,7 @@ public class WordService extends BaseService<Word, Long>{
                 throw new EnglishAppValidationException("Cannot save progress. Detail: " + processProgressDto.getMessage());
             }
         }
-        int nextNumberOfPage = wordPresent.getId().intValue();
+        int nextNumberOfPage = wordPresent.getId().intValue()%10;
         Pageable pageable = PageRequest.of(nextNumberOfPage, 1);
         Page<Word> nextPage = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelPresent, topicPresent, pageable);
         return new PageImpl<>(wordMapper.toDtoList(nextPage.getContent()), pageable, nextPage.getTotalElements());
