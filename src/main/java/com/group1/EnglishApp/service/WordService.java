@@ -76,7 +76,16 @@ public class WordService extends BaseService<Word, Long>{
         Word wordPresent = wordRepository.findById(wordId).get();
         Level levelPresent = wordPresent.getLevelOfWord();
         Topic topicPresent = wordPresent.getTopicOfWord();
-        int prevNumberOfPage = wordPresent.getId().intValue() - 2;
+        int presentId = wordPresent.getId().intValue();
+        int prevNumberOfPage;
+        if(presentId%10==0){
+            prevNumberOfPage = ((presentId-1)%10)-1;
+        } else {
+            prevNumberOfPage = wordPresent.getId().intValue()%10 - 2;
+        }
+        if(prevNumberOfPage<0){
+            prevNumberOfPage = 0;
+        }
         Pageable pageable = PageRequest.of(prevNumberOfPage, 1);
         Page<Word> backPage = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelPresent, topicPresent, pageable);
         return new PageImpl<>(wordMapper.toDtoList(backPage.getContent()), pageable, backPage.getTotalElements());
