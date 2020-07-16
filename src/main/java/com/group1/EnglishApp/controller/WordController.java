@@ -45,7 +45,7 @@ public class WordController {
     public ResponseEntity<GenericResponse<Page<WordDto>>> showLoadingProgressPageWord(Long userId, Long topicId, Long levelId) throws EnglishAppValidationException {
 
         return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
-                .data(wordService.getLoadingProgressPage(userId, topicId, levelId))
+                .data(wordService.getLoadingProgressPage(userId, levelId, topicId))
                 .build();
     }
 
