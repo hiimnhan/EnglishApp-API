@@ -65,7 +65,7 @@ public class WordService extends BaseService<Word, Long>{
             Page<Word> defaultList = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, defaultPageable);
             return new PageImpl<>(wordMapper.toDtoList(defaultList.getContent()), defaultPageable, defaultList.getTotalElements());
         }
-        Pageable pageable = PageRequest.of(Math.toIntExact(progressOfUser.getTotalElements())-1, 1);
+        Pageable pageable = PageRequest.of(Math.toIntExact(progressOfUser.getTotalElements()), 1);
         Page<Word> progressPageLoading = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, pageable);
         return new PageImpl<>(wordMapper.toDtoList(progressPageLoading.getContent()), pageable, progressPageLoading.getTotalElements());
     }
