@@ -65,8 +65,9 @@ public class WordService extends BaseService<Word, Long>{
             Page<Word> defaultList = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, defaultPageable);
             return new PageImpl<>(wordMapper.toDtoList(defaultList.getContent()), defaultPageable, defaultList.getTotalElements());
         }
-        Pageable pageable = PageRequest.of(progressOfUser.getNumberOfElements()-1, 1);
-        return new PageImpl<>(wordMapper.toDtoList(progressOfUser.getContent()), pageable, progressOfUser.getTotalElements());
+        Pageable pageable = PageRequest.of(Math.toIntExact(progressOfUser.getTotalElements())-1, 1);
+        Page<Word> progressPageLoading = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, pageable);
+        return new PageImpl<>(wordMapper.toDtoList(progressPageLoading.getContent()), pageable, progressPageLoading.getTotalElements());
     }
 
     public Page<WordDto> getBackPageWord(Long wordId)throws EnglishAppValidationException{
