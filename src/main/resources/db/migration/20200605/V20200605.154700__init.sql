@@ -133,9 +133,10 @@ IF NOT EXISTS(SELECT *
 CREATE TABLE [EnglishApp1].[Word]
 (
     [Id]           [int] IDENTITY (1,1) NOT NULL,
-    [Vocabulary]   [nvarchar](255)       NOT NULL,
+    [Vocabulary]   [nvarchar](255)      NOT NULL,
     [Spell]        [nvarchar](255)      NOT NULL,
-    [Image]        [image],
+    [TranslateVi]  [nvarchar](255)      NOT NULL,
+    [Image]        [nvarchar](max),
     [TopicId]      [int]                NOT NULL,
     [LevelId]      [int]                NOT NULL,
     [CreatedDate]  [datetime]           NOT NULL DEFAULT getdate(),

@@ -25,9 +25,12 @@ public class Word extends BaseEntity{
     @Nationalized
     private String spell;
 
-    @Lob
-    @Column(name = "Image", length = Integer.MAX_VALUE, nullable = true)
-    private byte[] image;
+    @Column(name = "TranslateVi")
+    @Nationalized
+    private String translateVi;
+
+    @Column(name = "Image")
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "TopicId", foreignKey = @ForeignKey(name = "FK_Word_TopicId"))
@@ -62,11 +65,11 @@ public class Word extends BaseEntity{
         this.spell = spell;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -102,6 +105,14 @@ public class Word extends BaseEntity{
         this.users = users;
     }
 
+    public String getTranslateVi() {
+        return translateVi;
+    }
+
+    public void setTranslateVi(String translateVi) {
+        this.translateVi = translateVi;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,6 +125,7 @@ public class Word extends BaseEntity{
                 .appendSuper(super.equals(o))
                 .append(vocabulary, word.vocabulary)
                 .append(spell, word.spell)
+                .append(translateVi, word.translateVi)
                 .append(image, word.image)
                 .isEquals();
     }
@@ -124,6 +136,7 @@ public class Word extends BaseEntity{
                 .appendSuper(super.hashCode())
                 .append(vocabulary)
                 .append(spell)
+                .append(translateVi)
                 .append(image)
                 .toHashCode();
     }
@@ -133,6 +146,7 @@ public class Word extends BaseEntity{
         return new ToStringBuilder(this)
                 .append("vocabulary", vocabulary)
                 .append("spell", spell)
+                .append("translateVi", translateVi)
                 .append("image", image)
                 .toString();
     }

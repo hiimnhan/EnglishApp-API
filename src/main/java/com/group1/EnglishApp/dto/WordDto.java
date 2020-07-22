@@ -15,6 +15,8 @@ public class WordDto {
     private Long id;
     private String vocabulary;
     private String spell;
+    private String translateVi;
+    private String image;
     private TopicDto topicOfWord;
     private LevelDto levelOfWord;
 
@@ -58,6 +60,22 @@ public class WordDto {
         this.levelOfWord = levelOfWord;
     }
 
+    public String getTranslateVi() {
+        return translateVi;
+    }
+
+    public void setTranslateVi(String translateVi) {
+        this.translateVi = translateVi;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,6 +88,8 @@ public class WordDto {
                 .append(id, wordDto.id)
                 .append(vocabulary, wordDto.vocabulary)
                 .append(spell, wordDto.spell)
+                .append(translateVi, wordDto.translateVi)
+                .append(image, wordDto.image)
                 .append(topicOfWord, wordDto.topicOfWord)
                 .append(levelOfWord, wordDto.levelOfWord)
                 .isEquals();
@@ -81,6 +101,8 @@ public class WordDto {
                 .append(id)
                 .append(vocabulary)
                 .append(spell)
+                .append(translateVi)
+                .append(image)
                 .append(topicOfWord)
                 .append(levelOfWord)
                 .toHashCode();
@@ -92,6 +114,8 @@ public class WordDto {
                 .append("id", id)
                 .append("vocabulary", vocabulary)
                 .append("spell", spell)
+                .append("translateVi", translateVi)
+                .append("image", image)
                 .append("topicOfWord", topicOfWord)
                 .append("levelOfWord", levelOfWord)
                 .toString();
