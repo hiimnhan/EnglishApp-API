@@ -39,33 +39,59 @@ public class WordController {
     @Autowired
     WordService wordService;
 
+//    @ApiOperation(value = "Loading progress page - Show word in page", notes = "Show progress word of this user in page")
+//    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
+//    @RequestMapping(value = PathConstant.LIST, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<GenericResponse<Page<WordDto>>> showLoadingProgressPageWord(Long userId, Long topicId, Long levelId) throws EnglishAppValidationException {
+//
+//        return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
+//                .data(wordService.getLoadingProgressPage(userId, levelId, topicId))
+//                .build();
+//    }
+
     @ApiOperation(value = "Loading progress page - Show word in page", notes = "Show progress word of this user in page")
     @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
-    @RequestMapping(value = PathConstant.LIST, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GenericResponse<Page<WordDto>>> showLoadingProgressPageWord(Long userId, Long topicId, Long levelId) throws EnglishAppValidationException {
+    @RequestMapping(value = PathConstant.FIRST_WORD, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<Page<WordDto>>> getFirstPageWord(Long userId, Long topicId, Long levelId) throws EnglishAppValidationException {
 
         return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
-                .data(wordService.getLoadingProgressPage(userId, levelId, topicId))
+                .data(wordService.getFirstWord(userId, levelId, topicId))
                 .build();
     }
 
-    @ApiOperation(value = "Back button API - Back button show Word in page", notes = "Back button show Word in page")
-    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
-    @RequestMapping(value = PathConstant.BACK_LIST, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GenericResponse<Page<WordDto>>> showBackPageWord(Long wordId) throws EnglishAppValidationException {
-
-        return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
-                .data(wordService.getBackPageWord(wordId))
-                .build();
-    }
+//    @ApiOperation(value = "Back button API - Back button show Word in page", notes = "Back button show Word in page")
+//    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
+//    @RequestMapping(value = PathConstant.BACK_LIST, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<GenericResponse<Page<WordDto>>> showBackPageWord(Long wordId) throws EnglishAppValidationException {
+//
+//        return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
+//                .data(wordService.getBackPageWord(wordId))
+//                .build();
+//    }
+//
+//    @ApiOperation(value = "Next button API - Next button show Word in page", notes = "Next button show Word in page")
+//    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
+//    @RequestMapping(value = PathConstant.NEXT_LIST, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<GenericResponse<Page<WordDto>>> showNextPageWord(Long userId, Long wordId) throws EnglishAppValidationException {
+//
+//        return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
+//                .data(wordService.getNextPageWord(userId, wordId))
+//                .build();
+//    }
 
     @ApiOperation(value = "Next button API - Next button show Word in page", notes = "Next button show Word in page")
     @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
-    @RequestMapping(value = PathConstant.NEXT_LIST, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GenericResponse<Page<WordDto>>> showNextPageWord(Long userId, Long wordId) throws EnglishAppValidationException {
+    @RequestMapping(value = PathConstant.PROCESS_PAGE, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "Integer", paramType = "query", value = "Result page you want to retrive (0..N)", defaultValue = "0"),
+            @ApiImplicitParam(name = "size", dataType = "Integer", paramType = "query", value = "Number of element you want to retrive per page.", defaultValue = "10"),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "String", paramType = "query", value = "Sorting criteria in the format : property,property2,..,asc|desc. " +
+                    "Default sort order is ascending. " + "Multiple sort criterias are supported.")
+    })
+    public ResponseEntity<GenericResponse<Page<WordDto>>> processPageWord(@ApiIgnore @PageableDefault(size = 1) Pageable pageable,Long userId, Long wordId) throws EnglishAppValidationException {
 
         return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
-                .data(wordService.getNextPageWord(userId, wordId))
+                .data(wordService.processPageWord(userId, wordId, pageable))
                 .build();
     }
 

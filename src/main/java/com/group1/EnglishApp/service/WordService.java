@@ -48,7 +48,33 @@ public class WordService extends BaseService<Word, Long>{
     }
 
 
-    public Page<WordDto> getLoadingProgressPage(Long userId, Long levelId, Long topicId) throws EnglishAppValidationException{
+//    public Page<WordDto> getLoadingProgressPage(Long userId, Long levelId, Long topicId) throws EnglishAppValidationException{
+//        if(!userRepository.findById(userId).isPresent()){
+//            throw new EnglishAppValidationException("Cannot find this user.");
+//        } else if (!levelRepository.findById(levelId).isPresent()){
+//            throw new EnglishAppValidationException("Cannot find this level.");
+//        } else if (!topicRepository.findById(topicId).isPresent()){
+//            throw new EnglishAppValidationException("Cannot find this topic");
+//        }
+//        User userProgress = userRepository.findById(userId).get();
+//        Level levelProgress = levelRepository.findById(levelId).get();
+//        Topic topicProgress = topicRepository.findById(topicId).get();
+//        Pageable defaultPageable = PageRequest.of(0, 1);
+//        Page<Word> progressOfUser = wordRepository.findAllByUsersAndLevelOfWordAndTopicOfWord(userProgress, levelProgress, topicProgress, defaultPageable);
+//        if(progressOfUser.isEmpty()){
+//            Page<Word> defaultList = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, defaultPageable);
+//            return new PageImpl<>(wordMapper.toDtoList(defaultList.getContent()), defaultPageable, defaultList.getTotalElements());
+//        }
+//        int pageReturn = Math.toIntExact(progressOfUser.getTotalElements());
+//        if(pageReturn==10){
+//            pageReturn = 0;
+//        }
+//        Pageable pageable = PageRequest.of(pageReturn, 1);
+//        Page<Word> progressPageLoading = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, pageable);
+//        return new PageImpl<>(wordMapper.toDtoList(progressPageLoading.getContent()), pageable, progressPageLoading.getTotalElements());
+//    }
+
+    public Page<WordDto> getFirstWord(Long userId, Long levelId, Long topicId) throws EnglishAppValidationException{
         if(!userRepository.findById(userId).isPresent()){
             throw new EnglishAppValidationException("Cannot find this user.");
         } else if (!levelRepository.findById(levelId).isPresent()){
@@ -59,44 +85,61 @@ public class WordService extends BaseService<Word, Long>{
         User userProgress = userRepository.findById(userId).get();
         Level levelProgress = levelRepository.findById(levelId).get();
         Topic topicProgress = topicRepository.findById(topicId).get();
-        Pageable defaultPageable = PageRequest.of(0, 1);
-        Page<Word> progressOfUser = wordRepository.findAllByUsersAndLevelOfWordAndTopicOfWord(userProgress, levelProgress, topicProgress, defaultPageable);
-        if(progressOfUser.isEmpty()){
-            Page<Word> defaultList = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, defaultPageable);
-            return new PageImpl<>(wordMapper.toDtoList(defaultList.getContent()), defaultPageable, defaultList.getTotalElements());
-        }
-        int pageReturn = Math.toIntExact(progressOfUser.getTotalElements());
-        if(pageReturn==10){
-            pageReturn = 0;
-        }
-        Pageable pageable = PageRequest.of(pageReturn, 1);
+        List<Word> wordHaveLearnt = wordRepository.findAllByUsersAndLevelOfWordAndTopicOfWord(userProgress, levelProgress, topicProgress);
+        int lastestWord = wordHaveLearnt.size();
+        Pageable pageable = PageRequest.of(lastestWord, 1);
         Page<Word> progressPageLoading = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelProgress, topicProgress, pageable);
         return new PageImpl<>(wordMapper.toDtoList(progressPageLoading.getContent()), pageable, progressPageLoading.getTotalElements());
     }
 
-    public Page<WordDto> getBackPageWord(Long wordId)throws EnglishAppValidationException{
-        if(!wordRepository.findById(wordId).isPresent()){
-            throw new EnglishAppValidationException("Cannot find this word.");
-        }
-        Word wordPresent = wordRepository.findById(wordId).get();
-        Level levelPresent = wordPresent.getLevelOfWord();
-        Topic topicPresent = wordPresent.getTopicOfWord();
-        int presentId = wordPresent.getId().intValue();
-        int prevNumberOfPage;
-        if(presentId%10==0){
-            prevNumberOfPage = ((presentId-1)%10)-1;
-        } else {
-            prevNumberOfPage = wordPresent.getId().intValue()%10 - 2;
-        }
-        if(prevNumberOfPage<0){
-            prevNumberOfPage = 0;
-        }
-        Pageable pageable = PageRequest.of(prevNumberOfPage, 1);
-        Page<Word> backPage = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelPresent, topicPresent, pageable);
-        return new PageImpl<>(wordMapper.toDtoList(backPage.getContent()), pageable, backPage.getTotalElements());
-    }
+//    public Page<WordDto> getBackPageWord(Long wordId)throws EnglishAppValidationException{
+//        if(!wordRepository.findById(wordId).isPresent()){
+//            throw new EnglishAppValidationException("Cannot find this word.");
+//        }
+//        Word wordPresent = wordRepository.findById(wordId).get();
+//        Level levelPresent = wordPresent.getLevelOfWord();
+//        Topic topicPresent = wordPresent.getTopicOfWord();
+//        int presentId = wordPresent.getId().intValue();
+//        int prevNumberOfPage;
+//        if(presentId%10==0){
+//            prevNumberOfPage = ((presentId-1)%10)-1;
+//        } else {
+//            prevNumberOfPage = wordPresent.getId().intValue()%10 - 2;
+//        }
+//        if(prevNumberOfPage<0){
+//            prevNumberOfPage = 0;
+//        }
+//        Pageable pageable = PageRequest.of(prevNumberOfPage, 1);
+//        Page<Word> backPage = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelPresent, topicPresent, pageable);
+//        return new PageImpl<>(wordMapper.toDtoList(backPage.getContent()), pageable, backPage.getTotalElements());
+//    }
+//
+//    public Page<WordDto> getNextPageWord(Long userId, Long wordId) throws EnglishAppValidationException{
+//        if(!userRepository.findById(userId).isPresent()){
+//            throw new EnglishAppValidationException("Cannot find this user.");
+//        } else if(!wordRepository.findById(wordId).isPresent()){
+//            throw new EnglishAppValidationException("Cannot find this word.");
+//        }
+//        User userPresent = userRepository.findById(userId).get();
+//        Word wordPresent = wordRepository.findById(wordId).get();
+//        Level levelPresent = wordPresent.getLevelOfWord();
+//        Topic topicPresent = wordPresent.getTopicOfWord();
+//        if(!userPresent.getWords().contains(wordPresent)){
+//            ProcessProgressForm processProgressForm = new ProcessProgressForm();
+//            processProgressForm.setUserId(userPresent.getId());
+//            processProgressForm.setWordId(wordPresent.getId());
+//            ProcessProgressDto processProgressDto = processProgress(processProgressForm);
+//            if(!processProgressDto.getProcessStatus()){
+//                throw new EnglishAppValidationException("Cannot save progress. Detail: " + processProgressDto.getMessage());
+//            }
+//        }
+//        int nextNumberOfPage = wordPresent.getId().intValue()%10;
+//        Pageable pageable = PageRequest.of(nextNumberOfPage, 1);
+//        Page<Word> nextPage = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelPresent, topicPresent, pageable);
+//        return new PageImpl<>(wordMapper.toDtoList(nextPage.getContent()), pageable, nextPage.getTotalElements());
+//    }
 
-    public Page<WordDto> getNextPageWord(Long userId, Long wordId) throws EnglishAppValidationException{
+    public Page<WordDto> processPageWord(Long userId, Long wordId, Pageable pageable) throws EnglishAppValidationException{
         if(!userRepository.findById(userId).isPresent()){
             throw new EnglishAppValidationException("Cannot find this user.");
         } else if(!wordRepository.findById(wordId).isPresent()){
@@ -115,10 +158,8 @@ public class WordService extends BaseService<Word, Long>{
                 throw new EnglishAppValidationException("Cannot save progress. Detail: " + processProgressDto.getMessage());
             }
         }
-        int nextNumberOfPage = wordPresent.getId().intValue()%10;
-        Pageable pageable = PageRequest.of(nextNumberOfPage, 1);
-        Page<Word> nextPage = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelPresent, topicPresent, pageable);
-        return new PageImpl<>(wordMapper.toDtoList(nextPage.getContent()), pageable, nextPage.getTotalElements());
+        Page<Word> pageReturn = wordRepository.findAllByLevelOfWordAndTopicOfWord(levelPresent, topicPresent, pageable);
+        return new PageImpl<>(wordMapper.toDtoList(pageReturn.getContent()), pageable, pageReturn.getTotalElements());
     }
     public ProcessProgressDto processProgress(ProcessProgressForm processProgressForm) throws EnglishAppValidationException {
         if(!userRepository.findById(processProgressForm.getUserId()).isPresent()){
