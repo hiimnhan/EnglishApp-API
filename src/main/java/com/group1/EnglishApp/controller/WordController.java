@@ -7,6 +7,8 @@ import com.group1.EnglishApp.dto.UserDto;
 import com.group1.EnglishApp.dto.WordDto;
 import com.group1.EnglishApp.exception.EnglishAppValidationException;
 import com.group1.EnglishApp.form.UserSearchForm;
+import com.group1.EnglishApp.form.WordCreateForm;
+import com.group1.EnglishApp.form.WordUpdateForm;
 import com.group1.EnglishApp.response.GenericResponse;
 import com.group1.EnglishApp.service.WordService;
 import io.swagger.annotations.Api;
@@ -79,7 +81,7 @@ public class WordController {
 //                .build();
 //    }
 
-    @ApiOperation(value = "Next button API - Next button show Word in page", notes = "Next button show Word in page")
+    @ApiOperation(value = "Process Page API - show Word in page", notes = "Show Word in page by request")
     @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
     @RequestMapping(value = PathConstant.PROCESS_PAGE, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
@@ -102,6 +104,62 @@ public class WordController {
 
         return ResponseEntityBuilder.<List<ProgressDto>>createBuilder()
                 .data(wordService.calculateProgress(userId))
+                .build();
+    }
+
+    @ApiOperation(value = "Next button API - Next button show Word in page", notes = "Next button show Word in page")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = PathConstant.GET_ALL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "Integer", paramType = "query", value = "Result page you want to retrive (0..N)", defaultValue = "0"),
+            @ApiImplicitParam(name = "size", dataType = "Integer", paramType = "query", value = "Number of element you want to retrive per page.", defaultValue = "10"),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "String", paramType = "query", value = "Sorting criteria in the format : property,property2,..,asc|desc. " +
+                    "Default sort order is ascending. " + "Multiple sort criterias are supported.")
+    })
+    public ResponseEntity<GenericResponse<Page<WordDto>>> processPageWord(@ApiIgnore Pageable pageable) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
+                .data(wordService.getAllWord(pageable))
+                .build();
+    }
+
+    @ApiOperation(value = "Get One Word", notes = "Get detail info of a Word")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = PathConstant.DETAIL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<WordDto>> createNewWord(Long wordId) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<WordDto>createBuilder()
+                .data(wordService.getOneWord(wordId))
+                .build();
+    }
+
+    @ApiOperation(value = "Create new Word", notes = "Create new word and return info")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = PathConstant.CREATE, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<WordDto>> createNewWord(WordCreateForm wordCreateForm) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<WordDto>createBuilder()
+                .data(wordService.createNewWord(wordCreateForm))
+                .build();
+    }
+
+    @ApiOperation(value = "Update a Word", notes = "Update a word and return info")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = PathConstant.UPDATE, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<WordDto>> updateWord(WordUpdateForm wordUpdateForm) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<WordDto>createBuilder()
+                .data(wordService.updateWord(wordUpdateForm))
+                .build();
+    }
+
+    @ApiOperation(value = "Delete a Word", notes = "Delete a word and boolean status")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = PathConstant.DELETE, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<Boolean>> updateWord(Long wordId) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<Boolean>createBuilder()
+                .data(wordService.deleteWord(wordId))
                 .build();
     }
 }

@@ -14,4 +14,9 @@ public class PathConstant {
     public static final String PROCESS_PROGRESS = "/process-progress";
     public static final String USER_PROGRESS = "/progress";
     public static final String SET_LEVEL = "/set_level";
+    public static final String GET_ALL = "/get_all";
+    public static final String CREATE = "/create";
+    public static final String UPDATE = "/update";
+    public static final String DETAIL = "/detail";
+    public static final String DELETE = "/delete";
 }

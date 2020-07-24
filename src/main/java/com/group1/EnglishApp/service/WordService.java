@@ -5,7 +5,11 @@ import com.group1.EnglishApp.dto.ProgressDto;
 import com.group1.EnglishApp.dto.WordDto;
 import com.group1.EnglishApp.exception.EnglishAppValidationException;
 import com.group1.EnglishApp.form.ProcessProgressForm;
+import com.group1.EnglishApp.form.WordCreateForm;
+import com.group1.EnglishApp.form.WordUpdateForm;
+import com.group1.EnglishApp.mapper.WordCreateMapper;
 import com.group1.EnglishApp.mapper.WordMapper;
+import com.group1.EnglishApp.mapper.WordUpdateMapper;
 import com.group1.EnglishApp.model.Level;
 import com.group1.EnglishApp.model.Topic;
 import com.group1.EnglishApp.model.User;
@@ -35,16 +39,21 @@ public class WordService extends BaseService<Word, Long>{
     private LevelRepository levelRepository;
     private TopicRepository topicRepository;
     private WordMapper wordMapper;
+    private WordCreateMapper wordCreateMapper;
+    private WordUpdateMapper wordUpdateMapper;
 
     @Autowired
     public WordService(WordRepository wordRepository, UserRepository userRepository, LevelRepository levelRepository,
-                       TopicRepository topicRepository, WordMapper wordMapper){
+                       TopicRepository topicRepository, WordMapper wordMapper, WordCreateMapper wordCreateMapper,
+                       WordUpdateMapper wordUpdateMapper){
         super(wordRepository);
         this.wordRepository = wordRepository;
         this.userRepository = userRepository;
         this.levelRepository = levelRepository;
         this.topicRepository = topicRepository;
         this.wordMapper = wordMapper;
+        this.wordCreateMapper = wordCreateMapper;
+        this.wordUpdateMapper = wordUpdateMapper;
     }
 
 
@@ -217,5 +226,62 @@ public class WordService extends BaseService<Word, Long>{
             }
         }
         return returnListProgress;
+    }
+
+    public Page<WordDto> getAllWord(Pageable pageable) throws EnglishAppValidationException{
+        Page<Word> returnPage = wordRepository.findAll(pageable);
+        if(returnPage.getTotalElements()==0){
+            throw new EnglishAppValidationException("Cannot get any word");
+        }
+        return new PageImpl<>(wordMapper.toDtoList(returnPage.getContent()), pageable, returnPage.getTotalElements());
+    }
+
+    public WordDto getOneWord(Long wordId) throws EnglishAppValidationException{
+        if(!wordRepository.findById(wordId).isPresent()){
+            throw new EnglishAppValidationException("Cannot find word with this id");
+        }
+        return wordMapper.toDto(wordRepository.findById(wordId).get());
+    }
+
+    public WordDto createNewWord(WordCreateForm wordCreateForm) throws EnglishAppValidationException{
+        if (!levelRepository.findById(wordCreateForm.getLevelId()).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this level.");
+        } else if (!topicRepository.findById(wordCreateForm.getTopicId()).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this topic");
+        }
+        Level level = levelRepository.findById(wordCreateForm.getLevelId()).get();
+        Topic topic = topicRepository.findById(wordCreateForm.getTopicId()).get();
+        Word newWord = wordCreateMapper.toEntity(wordCreateForm);
+        newWord.setLevelOfWord(level);
+        newWord.setTopicOfWord(topic);
+        return wordMapper.toDto(wordRepository.save(newWord));
+    }
+
+    public WordDto updateWord(WordUpdateForm wordUpdateForm) throws EnglishAppValidationException{
+        if(!wordRepository.findById(wordUpdateForm.getId()).isPresent()){
+            throw new EnglishAppValidationException("This word id is not exist in database");
+        }
+        if (!levelRepository.findById(wordUpdateForm.getLevelId()).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this level.");
+        } else if (!topicRepository.findById(wordUpdateForm.getTopicId()).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this topic");
+        }
+        Level level = levelRepository.findById(wordUpdateForm.getLevelId()).get();
+        Topic topic = topicRepository.findById(wordUpdateForm.getTopicId()).get();
+        Word updated = wordUpdateMapper.toEntity(wordUpdateForm);
+        updated.setLevelOfWord(level);
+        updated.setTopicOfWord(topic);
+        return wordMapper.toDto(wordRepository.save(updated));
+    }
+
+    public Boolean deleteWord(Long wordId) throws EnglishAppValidationException{
+        Boolean delete = false;
+        if(!wordRepository.findById(wordId).isPresent()){
+            throw new EnglishAppValidationException("This word id is not exist in database");
+        } else {
+            wordRepository.delete(wordRepository.findById(wordId).get());
+            delete = true;
+        }
+        return delete;
     }
 }
