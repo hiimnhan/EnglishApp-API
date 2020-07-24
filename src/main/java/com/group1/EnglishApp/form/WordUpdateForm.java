@@ -14,22 +14,17 @@ public class WordUpdateForm {
     @ApiModelProperty(required=true)
     @NotNull
     private Long id;
-    @ApiModelProperty(required=true)
-    @NotEmpty
+    @ApiModelProperty
     private String vocabulary;
-    @ApiModelProperty(required=true)
-    @NotEmpty
+    @ApiModelProperty
     private String spell;
-    @ApiModelProperty(required=true)
-    @NotEmpty
+    @ApiModelProperty
     private String translateVi;
     @ApiModelProperty(required=false)
     private String image;
-    @ApiModelProperty(required=true)
-    @NotNull
+    @ApiModelProperty
     private Long levelId;
-    @ApiModelProperty(required=true)
-    @NotNull
+    @ApiModelProperty
     private Long topicId;
 
     public Long getId() {
