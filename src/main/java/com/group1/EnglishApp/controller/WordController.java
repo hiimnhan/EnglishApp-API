@@ -107,7 +107,7 @@ public class WordController {
                 .build();
     }
 
-    @ApiOperation(value = "Next button API - Next button show Word in page", notes = "Next button show Word in page")
+    @ApiOperation(value = "Get All Word - Get All Word in page", notes = "Get All Word in page")
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = PathConstant.GET_ALL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
