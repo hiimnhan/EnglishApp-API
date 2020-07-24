@@ -40,6 +40,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "Email")
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "LastestLevelId", foreignKey = @ForeignKey(name = "FK_User_LastestLevelId"))
+    private Level lastestLevelId;
+
     @Transient
     private String accessToken;
 
@@ -118,6 +122,14 @@ public class User extends BaseEntity implements UserDetails {
         this.words = words;
     }
 
+    public Level getLastestLevelId() {
+        return lastestLevelId;
+    }
+
+    public void setLastestLevelId(Level lastestLevelId) {
+        this.lastestLevelId = lastestLevelId;
+    }
+
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -162,6 +174,7 @@ public class User extends BaseEntity implements UserDetails {
                 .append(firstName, user.firstName)
                 .append(lastName, user.lastName)
                 .append(email, user.email)
+                .append(lastestLevelId, user.lastestLevelId)
                 .isEquals();
     }
 
@@ -173,6 +186,7 @@ public class User extends BaseEntity implements UserDetails {
                 .append(firstName)
                 .append(lastName)
                 .append(email)
+                .append(lastestLevelId)
                 .toHashCode();
     }
 
@@ -183,6 +197,7 @@ public class User extends BaseEntity implements UserDetails {
                 .append("firstName", firstName)
                 .append("lastName", lastName)
                 .append("email", email)
+                .append("lastestLevelId", lastestLevelId)
                 .toString();
     }
 }

@@ -25,6 +25,9 @@ public class Level extends BaseEntity{
     @OneToMany(targetEntity = Question.class, mappedBy = "levelOfQuestion", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Question> questions;
 
+    @OneToMany(targetEntity = User.class, mappedBy = "lastestLevelId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<User> users;
+
     public String getName() {
         return name;
     }
@@ -47,6 +50,14 @@ public class Level extends BaseEntity{
 
     public void setQuestions(Set<Question> questions) {
         this.questions = questions;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override

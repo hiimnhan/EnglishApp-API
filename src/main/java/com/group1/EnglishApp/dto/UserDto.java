@@ -14,6 +14,7 @@ public class UserDto {
     private String username;
     private String firstName;
     private String lastName;
+    private LevelDto lastestLevelId;
     private RoleDto role;
     private String accessToken;
 
@@ -65,6 +66,14 @@ public class UserDto {
         this.accessToken = accessToken;
     }
 
+    public LevelDto getLastestLevelId() {
+        return lastestLevelId;
+    }
+
+    public void setLastestLevelId(LevelDto lastestLevelId) {
+        this.lastestLevelId = lastestLevelId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,6 +88,7 @@ public class UserDto {
                 .append(firstName, userDto.firstName)
                 .append(lastName, userDto.lastName)
                 .append(role, userDto.role)
+                .append(lastestLevelId, userDto.lastestLevelId)
                 .append(accessToken, userDto.accessToken)
                 .isEquals();
     }
@@ -91,6 +101,7 @@ public class UserDto {
                 .append(firstName)
                 .append(lastName)
                 .append(role)
+                .append(lastestLevelId)
                 .append(accessToken)
                 .toHashCode();
     }
@@ -103,6 +114,7 @@ public class UserDto {
                 .append("firstName", firstName)
                 .append("lastName", lastName)
                 .append("role", role)
+                .append("levelDto", lastestLevelId)
                 .append("accessToken", accessToken)
                 .toString();
     }

@@ -20,6 +20,7 @@ CREATE TABLE [EnglishApp1].[User]
     [Email]        [varchar](255)       NOT NULL,
     [Username]     [varchar](255)       NOT NULL,
     [Password]     [varchar](255)       NOT NULL,
+    [LastestLevelId][int]               ,
     [RoleId]       [int]                NOT NULL,
     [CreatedDate]  [datetime]           NOT NULL DEFAULT getdate(),
     [ModifiedDate] [datetime]           NULL,
@@ -122,6 +123,7 @@ ALTER TABLE [EnglishApp1].[User]
     WITH CHECK ADD CONSTRAINT [FK_User_RoleId] FOREIGN KEY ([RoleId])
         REFERENCES [EnglishApp1].[Role] ([Id])
 GO
+
 ALTER TABLE [EnglishApp1].[User]
     CHECK CONSTRAINT [FK_User_RoleId]
 GO
@@ -307,4 +309,11 @@ ALTER TABLE [EnglishApp1].[Question]
 GO
 ALTER TABLE [EnglishApp1].[Question]
     CHECK CONSTRAINT [FK_Question_TopicId]
+GO
+IF NOT EXISTS(SELECT *
+              FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS
+              WHERE CONSTRAINT_NAME = 'FK_User_LastestLevelId')
+ALTER TABLE [EnglishApp1].[User]
+    WITH CHECK ADD CONSTRAINT [FK_User_LastestLevelId] FOREIGN KEY ([LastestLevelId])
+        REFERENCES [EnglishApp1].[Level] ([Id])
 GO

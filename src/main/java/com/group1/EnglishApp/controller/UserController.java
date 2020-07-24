@@ -77,4 +77,14 @@ public class UserController {
                 .data(userService.processProgress(processProgressForm))
                 .build();
     }
+
+    @ApiOperation(value = "Save Progress - Save Progress of this user", notes = "Save Progress of this user and return status")
+    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
+    @RequestMapping(value = PathConstant.SET_LEVEL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<UserDto>> setLevel(Long userId, Long levelId) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<UserDto>createBuilder()
+                .data(userService.setLevel(userId, levelId))
+                .build();
+    }
 }

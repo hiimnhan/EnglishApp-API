@@ -9,8 +9,10 @@ import com.group1.EnglishApp.form.RegisterForm;
 import com.group1.EnglishApp.form.UserSearchForm;
 import com.group1.EnglishApp.mapper.UserMapper;
 import com.group1.EnglishApp.mapper.UserRegisterMapper;
+import com.group1.EnglishApp.model.Level;
 import com.group1.EnglishApp.model.User;
 import com.group1.EnglishApp.model.Word;
+import com.group1.EnglishApp.repository.LevelRepository;
 import com.group1.EnglishApp.repository.RoleRepository;
 import com.group1.EnglishApp.repository.UserRepository;
 import com.group1.EnglishApp.repository.WordRepository;
@@ -34,16 +36,18 @@ public class UserService extends BaseService<User, Long>{
     private UserMapper userMapper;
     private RoleRepository roleRepository;
     private WordRepository wordRepository;
+    private LevelRepository levelRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, UserMapper userMapper, UserRegisterMapper userRegisterMapper,
-                       RoleRepository roleRepository, WordRepository wordRepository) {
+                       RoleRepository roleRepository, WordRepository wordRepository, LevelRepository levelRepository) {
         super(userRepository);
         this.userRepository = userRepository;
         this.userRegisterMapper = userRegisterMapper;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.wordRepository = wordRepository;
+        this.levelRepository = levelRepository;
     }
 
     /**
@@ -113,5 +117,18 @@ public class UserService extends BaseService<User, Long>{
             returnStatus.setMessage("Save user progress failed!");
         }
         return returnStatus;
+    }
+
+    public UserDto setLevel(Long userId, Long levelId) throws EnglishAppValidationException{
+        if(!levelRepository.findById(levelId).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this level");
+        }
+        Level level = levelRepository.findById(levelId).get();
+        if(!userRepository.findById(userId).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this user");
+        }
+        User user = userRepository.findById(userId).get();
+        user.setLastestLevelId(level);
+        return userMapper.toDto(userRepository.save(user));
     }
 }
