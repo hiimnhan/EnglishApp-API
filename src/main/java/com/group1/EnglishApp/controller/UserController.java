@@ -4,11 +4,13 @@ import com.group1.EnglishApp.builder.ResponseEntityBuilder;
 import com.group1.EnglishApp.constant.PathConstant;
 import com.group1.EnglishApp.dto.ProcessProgressDto;
 import com.group1.EnglishApp.dto.UserDto;
+import com.group1.EnglishApp.dto.UserManagementDto;
 import com.group1.EnglishApp.exception.EnglishAppException;
 import com.group1.EnglishApp.exception.EnglishAppValidationException;
 import com.group1.EnglishApp.form.ProcessProgressForm;
 import com.group1.EnglishApp.form.RegisterForm;
 import com.group1.EnglishApp.form.UserSearchForm;
+import com.group1.EnglishApp.form.UserUpdateForm;
 import com.group1.EnglishApp.response.GenericResponse;
 import com.group1.EnglishApp.service.UserService;
 import io.swagger.annotations.Api;
@@ -68,23 +70,43 @@ public class UserController {
                 .build();
     }
 
-    @ApiOperation(value = "Save Progress - Save Progress of this user", notes = "Save Progress of this user and return status")
+    @ApiOperation(value = "Set level", notes = "Set lastest level of user")
     @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
-    @RequestMapping(value = PathConstant.PROCESS_PROGRESS, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GenericResponse<ProcessProgressDto>> register(@Valid @RequestBody ProcessProgressForm processProgressForm) throws EnglishAppValidationException {
-
-        return ResponseEntityBuilder.<ProcessProgressDto>createBuilder()
-                .data(userService.processProgress(processProgressForm))
-                .build();
-    }
-
-    @ApiOperation(value = "Save Progress - Save Progress of this user", notes = "Save Progress of this user and return status")
-    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
-    @RequestMapping(value = PathConstant.SET_LEVEL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = PathConstant.SET_LEVEL, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GenericResponse<UserDto>> setLevel(Long userId, Long levelId) throws EnglishAppValidationException {
 
         return ResponseEntityBuilder.<UserDto>createBuilder()
                 .data(userService.setLevel(userId, levelId))
+                .build();
+    }
+
+    @ApiOperation(value = "Get one user", notes = "Get info of a user")
+    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
+    @RequestMapping(value = PathConstant.DETAIL, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<UserManagementDto>> getOneUser(Long userId) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<UserManagementDto>createBuilder()
+                .data(userService.getOneUser(userId))
+                .build();
+    }
+
+    @ApiOperation(value = "Update user", notes = "Update user and return info")
+    @PreAuthorize("hasAuthority('ADMIN')"+"||hasAuthority('USER')")
+    @RequestMapping(value = PathConstant.UPDATE, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<UserManagementDto>> updateUser(UserUpdateForm userUpdateForm) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<UserManagementDto>createBuilder()
+                .data(userService.updateUser(userUpdateForm))
+                .build();
+    }
+
+    @ApiOperation(value = "Activate user", notes = "Active user and return info")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = PathConstant.ACTIVE, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<UserManagementDto>> activateUser(Long userId) throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<UserManagementDto>createBuilder()
+                .data(userService.activeUser(userId))
                 .build();
     }
 }

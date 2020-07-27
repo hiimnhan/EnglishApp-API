@@ -22,6 +22,7 @@ CREATE TABLE [EnglishApp1].[User]
     [Password]     [varchar](255)       NOT NULL,
     [LastestLevelId][int]               ,
     [RoleId]       [int]                NOT NULL,
+    [Active]       [bit]                NOT NULL DEFAULT 1,
     [CreatedDate]  [datetime]           NOT NULL DEFAULT getdate(),
     [ModifiedDate] [datetime]           NULL,
     PRIMARY KEY CLUSTERED

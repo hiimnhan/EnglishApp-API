@@ -2,13 +2,17 @@ package com.group1.EnglishApp.service;
 
 import com.group1.EnglishApp.dto.ProcessProgressDto;
 import com.group1.EnglishApp.dto.UserDto;
+import com.group1.EnglishApp.dto.UserManagementDto;
 import com.group1.EnglishApp.exception.EnglishAppException;
 import com.group1.EnglishApp.exception.EnglishAppValidationException;
 import com.group1.EnglishApp.form.ProcessProgressForm;
 import com.group1.EnglishApp.form.RegisterForm;
 import com.group1.EnglishApp.form.UserSearchForm;
+import com.group1.EnglishApp.form.UserUpdateForm;
+import com.group1.EnglishApp.mapper.UserManagementMapper;
 import com.group1.EnglishApp.mapper.UserMapper;
 import com.group1.EnglishApp.mapper.UserRegisterMapper;
+import com.group1.EnglishApp.mapper.UserUpdateMapper;
 import com.group1.EnglishApp.model.Level;
 import com.group1.EnglishApp.model.User;
 import com.group1.EnglishApp.model.Word;
@@ -37,10 +41,13 @@ public class UserService extends BaseService<User, Long>{
     private RoleRepository roleRepository;
     private WordRepository wordRepository;
     private LevelRepository levelRepository;
+    private UserUpdateMapper userUpdateMapper;
+    private UserManagementMapper userManagementMapper;
 
     @Autowired
     public UserService(UserRepository userRepository, UserMapper userMapper, UserRegisterMapper userRegisterMapper,
-                       RoleRepository roleRepository, WordRepository wordRepository, LevelRepository levelRepository) {
+                       RoleRepository roleRepository, WordRepository wordRepository, LevelRepository levelRepository,
+                       UserUpdateMapper userUpdateMapper, UserManagementMapper userManagementMapper) {
         super(userRepository);
         this.userRepository = userRepository;
         this.userRegisterMapper = userRegisterMapper;
@@ -48,6 +55,8 @@ public class UserService extends BaseService<User, Long>{
         this.userMapper = userMapper;
         this.wordRepository = wordRepository;
         this.levelRepository = levelRepository;
+        this.userUpdateMapper = userUpdateMapper;
+        this.userManagementMapper = userManagementMapper;
     }
 
     /**
@@ -69,7 +78,7 @@ public class UserService extends BaseService<User, Long>{
      *
      * @param registerForm
      * @return UserDto
-     * @throws EnglishAppException
+     * @throws EnglishAppValidationException
      */
     public UserDto registerUser(RegisterForm registerForm) throws EnglishAppValidationException {
         User newUser = userRegisterMapper.toEntity(registerForm);
@@ -91,33 +100,7 @@ public class UserService extends BaseService<User, Long>{
         return new PageImpl<>(userMapper.toDtoList(page.getContent()), pageable, page.getTotalElements());
     }
 
-    public ProcessProgressDto processProgress(ProcessProgressForm processProgressForm) throws EnglishAppValidationException{
-        User user = userRepository.findById(processProgressForm.getUserId()).get();
-        if(user==null){
-            throw new EnglishAppValidationException("Not found this user");
-        }
-        Word word = wordRepository.findById(processProgressForm.getWordId()).get();
-        if(word==null){
-            throw new EnglishAppValidationException("Not found this word");
-        }
-        Set<Word> existWordOfThisUser = user.getWords();
-        if(user.getWords().contains(word)){
-            throw new EnglishAppValidationException("This user already learn this word");
-        } else {
-            existWordOfThisUser.add(word);
-        }
-        user.setWords(existWordOfThisUser);
-        ProcessProgressDto returnStatus = new ProcessProgressDto();
-        try{
-            userRepository.save(user);
-            returnStatus.setProcessStatus(true);
-            returnStatus.setMessage("Save user progress successfully!");
-        } catch (Exception e){
-            returnStatus.setProcessStatus(false);
-            returnStatus.setMessage("Save user progress failed!");
-        }
-        return returnStatus;
-    }
+
 
     public UserDto setLevel(Long userId, Long levelId) throws EnglishAppValidationException{
         if(!levelRepository.findById(levelId).isPresent()){
@@ -130,5 +113,33 @@ public class UserService extends BaseService<User, Long>{
         User user = userRepository.findById(userId).get();
         user.setLastestLevelId(level);
         return userMapper.toDto(userRepository.save(user));
+    }
+
+    public UserManagementDto getOneUser(Long userId) throws EnglishAppValidationException{
+        if(!userRepository.findById(userId).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this user");
+        }
+        User user = userRepository.findById(userId).get();
+        return userManagementMapper.toDto(user);
+    }
+
+    public UserManagementDto updateUser(UserUpdateForm userUpdateForm) throws EnglishAppValidationException{
+        if(!userRepository.findById(userUpdateForm.getId()).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this user");
+        }
+        return userManagementMapper.toDto(userRepository.save(userUpdateMapper.toEntity(userUpdateForm)));
+    }
+
+    public UserManagementDto activeUser(Long userId) throws EnglishAppValidationException{
+        if(!userRepository.findById(userId).isPresent()){
+            throw new EnglishAppValidationException("Cannot find this user");
+        }
+        User user = userRepository.findById(userId).get();
+        if(user.getActive()){
+            user.setActive(false);
+        } else {
+            user.setActive(true);
+        }
+        return userManagementMapper.toDto(userRepository.save(user));
     }
 }

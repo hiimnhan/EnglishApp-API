@@ -22,9 +22,9 @@ public class WordUpdateForm {
     private String translateVi;
     @ApiModelProperty(required=false)
     private String image;
-    @ApiModelProperty
+    @ApiModelProperty(dataType = "java.lang.Long")
     private Long levelId;
-    @ApiModelProperty
+    @ApiModelProperty(dataType = "java.lang.Long")
     private Long topicId;
 
     public Long getId() {

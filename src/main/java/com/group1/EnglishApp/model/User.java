@@ -40,6 +40,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "Email")
     private String email;
 
+    @Column(name = "Active")
+    private Boolean active;
+
     @ManyToOne
     @JoinColumn(name = "LastestLevelId", foreignKey = @ForeignKey(name = "FK_User_LastestLevelId"))
     private Level lastestLevelId;
@@ -130,6 +133,14 @@ public class User extends BaseEntity implements UserDetails {
         this.lastestLevelId = lastestLevelId;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -157,7 +168,7 @@ public class User extends BaseEntity implements UserDetails {
     @Transient
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 
     @Override

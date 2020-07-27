@@ -1,5 +1,6 @@
 package com.group1.EnglishApp.service;
 
+import com.group1.EnglishApp.dto.LevelAndTopicToDropBoxDto;
 import com.group1.EnglishApp.dto.ProcessProgressDto;
 import com.group1.EnglishApp.dto.ProgressDto;
 import com.group1.EnglishApp.dto.WordDto;
@@ -8,9 +9,7 @@ import com.group1.EnglishApp.form.ProcessProgressForm;
 import com.group1.EnglishApp.form.WordCreateForm;
 import com.group1.EnglishApp.form.WordSearchForm;
 import com.group1.EnglishApp.form.WordUpdateForm;
-import com.group1.EnglishApp.mapper.WordCreateMapper;
-import com.group1.EnglishApp.mapper.WordMapper;
-import com.group1.EnglishApp.mapper.WordUpdateMapper;
+import com.group1.EnglishApp.mapper.*;
 import com.group1.EnglishApp.model.Level;
 import com.group1.EnglishApp.model.Topic;
 import com.group1.EnglishApp.model.User;
@@ -39,7 +38,9 @@ public class WordService extends BaseService<Word, Long>{
     private WordRepository wordRepository;
     private UserRepository userRepository;
     private LevelRepository levelRepository;
+    private LevelMapper levelMapper;
     private TopicRepository topicRepository;
+    private TopicMapper topicMapper;
     private WordMapper wordMapper;
     private WordCreateMapper wordCreateMapper;
     private WordUpdateMapper wordUpdateMapper;
@@ -47,7 +48,7 @@ public class WordService extends BaseService<Word, Long>{
     @Autowired
     public WordService(WordRepository wordRepository, UserRepository userRepository, LevelRepository levelRepository,
                        TopicRepository topicRepository, WordMapper wordMapper, WordCreateMapper wordCreateMapper,
-                       WordUpdateMapper wordUpdateMapper){
+                       WordUpdateMapper wordUpdateMapper, LevelMapper levelMapper, TopicMapper topicMapper){
         super(wordRepository);
         this.wordRepository = wordRepository;
         this.userRepository = userRepository;
@@ -56,6 +57,8 @@ public class WordService extends BaseService<Word, Long>{
         this.wordMapper = wordMapper;
         this.wordCreateMapper = wordCreateMapper;
         this.wordUpdateMapper = wordUpdateMapper;
+        this.levelMapper = levelMapper;
+        this.topicMapper = topicMapper;
     }
 
 
@@ -286,5 +289,20 @@ public class WordService extends BaseService<Word, Long>{
             delete = true;
         }
         return delete;
+    }
+
+    public LevelAndTopicToDropBoxDto getAllTopicAndLevel() throws EnglishAppValidationException{
+        LevelAndTopicToDropBoxDto topicToDropBoxDto = new LevelAndTopicToDropBoxDto();
+        List<Level> levelList = levelRepository.findAll();
+        if(levelList.isEmpty()){
+            throw new EnglishAppValidationException("Cannot load any level");
+        }
+        List<Topic> topicList = topicRepository.findAll();
+        if(topicList.isEmpty()){
+            throw new EnglishAppValidationException("Cannot load any topic");
+        }
+        topicToDropBoxDto.setLevelDtoList(levelMapper.toDtoList(levelList));
+        topicToDropBoxDto.setTopicDtoList(topicMapper.toDtoList(topicList));
+        return topicToDropBoxDto;
     }
 }

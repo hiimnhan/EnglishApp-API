@@ -22,10 +22,10 @@ public class WordCreateForm {
     private String translateVi;
     @ApiModelProperty(required=false)
     private String image;
-    @ApiModelProperty(required=true)
+    @ApiModelProperty(required=true, dataType = "java.lang.Long")
     @NotNull
     private Long levelId;
-    @ApiModelProperty(required=true)
+    @ApiModelProperty(required=true, dataType = "java.lang.Long")
     @NotNull
     private Long topicId;
 

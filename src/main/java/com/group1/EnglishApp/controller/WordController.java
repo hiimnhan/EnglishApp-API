@@ -2,6 +2,7 @@ package com.group1.EnglishApp.controller;
 
 import com.group1.EnglishApp.builder.ResponseEntityBuilder;
 import com.group1.EnglishApp.constant.PathConstant;
+import com.group1.EnglishApp.dto.LevelAndTopicToDropBoxDto;
 import com.group1.EnglishApp.dto.ProgressDto;
 import com.group1.EnglishApp.dto.UserDto;
 import com.group1.EnglishApp.dto.WordDto;
@@ -161,6 +162,15 @@ public class WordController {
 
         return ResponseEntityBuilder.<Boolean>createBuilder()
                 .data(wordService.deleteWord(wordId))
+                .build();
+    }
+    @ApiOperation(value = "Get All Level and Topic", notes = "Get all level and topic to dropbox")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = PathConstant.LEVEL_AND_TOPIC, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GenericResponse<LevelAndTopicToDropBoxDto>> getAllLevelAndTopic() throws EnglishAppValidationException {
+
+        return ResponseEntityBuilder.<LevelAndTopicToDropBoxDto>createBuilder()
+                .data(wordService.getAllTopicAndLevel())
                 .build();
     }
 }
