@@ -6,6 +6,7 @@ import com.group1.EnglishApp.dto.WordDto;
 import com.group1.EnglishApp.exception.EnglishAppValidationException;
 import com.group1.EnglishApp.form.ProcessProgressForm;
 import com.group1.EnglishApp.form.WordCreateForm;
+import com.group1.EnglishApp.form.WordSearchForm;
 import com.group1.EnglishApp.form.WordUpdateForm;
 import com.group1.EnglishApp.mapper.WordCreateMapper;
 import com.group1.EnglishApp.mapper.WordMapper;
@@ -18,6 +19,7 @@ import com.group1.EnglishApp.repository.LevelRepository;
 import com.group1.EnglishApp.repository.TopicRepository;
 import com.group1.EnglishApp.repository.UserRepository;
 import com.group1.EnglishApp.repository.WordRepository;
+import com.group1.EnglishApp.specification.WordSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -228,10 +230,11 @@ public class WordService extends BaseService<Word, Long>{
         return returnListProgress;
     }
 
-    public Page<WordDto> getAllWord(Pageable pageable) throws EnglishAppValidationException{
-        Page<Word> returnPage = wordRepository.findAll(pageable);
+    public Page<WordDto> getAllWord(Pageable pageable, WordSearchForm wordSearchForm) throws EnglishAppValidationException{
+        WordSpecification wordSpecification = new WordSpecification(wordSearchForm);
+        Page<Word> returnPage = wordRepository.findAll(wordSpecification, pageable);
         if(returnPage.getTotalElements()==0){
-            throw new EnglishAppValidationException("Cannot get any word");
+            throw new EnglishAppValidationException("Cannot find any word with these specification.");
         }
         return new PageImpl<>(wordMapper.toDtoList(returnPage.getContent()), pageable, returnPage.getTotalElements());
     }

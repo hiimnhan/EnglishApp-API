@@ -8,6 +8,7 @@ import com.group1.EnglishApp.dto.WordDto;
 import com.group1.EnglishApp.exception.EnglishAppValidationException;
 import com.group1.EnglishApp.form.UserSearchForm;
 import com.group1.EnglishApp.form.WordCreateForm;
+import com.group1.EnglishApp.form.WordSearchForm;
 import com.group1.EnglishApp.form.WordUpdateForm;
 import com.group1.EnglishApp.response.GenericResponse;
 import com.group1.EnglishApp.service.WordService;
@@ -116,10 +117,10 @@ public class WordController {
             @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "String", paramType = "query", value = "Sorting criteria in the format : property,property2,..,asc|desc. " +
                     "Default sort order is ascending. " + "Multiple sort criterias are supported.")
     })
-    public ResponseEntity<GenericResponse<Page<WordDto>>> processPageWord(@ApiIgnore Pageable pageable) throws EnglishAppValidationException {
+    public ResponseEntity<GenericResponse<Page<WordDto>>> processPageWord(@ApiIgnore Pageable pageable, WordSearchForm wordSearchForm) throws EnglishAppValidationException {
 
         return ResponseEntityBuilder.<Page<WordDto>>createBuilder()
-                .data(wordService.getAllWord(pageable))
+                .data(wordService.getAllWord(pageable, wordSearchForm))
                 .build();
     }
 
