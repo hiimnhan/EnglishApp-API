@@ -88,6 +88,7 @@ public class UserService extends BaseService<User, Long>{
         newUser.setRole(roleRepository.findById(2L).get());
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        newUser.setActive(true);
         return userMapper.toDto(userRepository.save(newUser));
     }
 

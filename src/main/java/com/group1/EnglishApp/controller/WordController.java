@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -138,7 +139,7 @@ public class WordController {
     @ApiOperation(value = "Create new Word", notes = "Create new word and return info")
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = PathConstant.CREATE, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GenericResponse<WordDto>> createNewWord(WordCreateForm wordCreateForm) throws EnglishAppValidationException {
+    public ResponseEntity<GenericResponse<WordDto>> createNewWord(@RequestBody WordCreateForm wordCreateForm) throws EnglishAppValidationException {
 
         return ResponseEntityBuilder.<WordDto>createBuilder()
                 .data(wordService.createNewWord(wordCreateForm))
