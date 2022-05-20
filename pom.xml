@@ -19,7 +19,7 @@
 		<mssql-jdbc.version>8.2.0.jre8</mssql-jdbc.version>
 		<springfox-swagger2.version>2.9.2</springfox-swagger2.version>
 		<jwt.version>0.9.1</jwt.version>
-		<gson.version>2.8.6</gson.version>
+		<gson.version>2.8.9</gson.version>
 		<mapstruct.version>1.3.1.Final</mapstruct.version>
 		<cxf-swagger.version>3.1.11</cxf-swagger.version>
 		<swagger-jaxrs.version>1.5.15</swagger-jaxrs.version>
